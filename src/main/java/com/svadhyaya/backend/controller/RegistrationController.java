@@ -6,6 +6,7 @@ import com.svadhyaya.backend.db.models.User;
 import com.svadhyaya.backend.models.AuthenticationRequest;
 import com.svadhyaya.backend.models.DefaultResponse;
 import com.svadhyaya.backend.models.ErrorResponse;
+import com.svadhyaya.backend.service.DefaultRoleService;
 import com.svadhyaya.backend.service.DefaultUserDetailsService;
 import com.svadhyaya.backend.validators.AuthenticationRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class RegistrationController {
     private DefaultUserDetailsService userDetailsService;
 
     @Autowired
+    private DefaultRoleService defaultRoleService;
+
+    @Autowired
     private AuthenticationRequestValidator authenticationRequestValidator;
 
     @InitBinder("authenticationRequest")
@@ -50,7 +54,7 @@ public class RegistrationController {
             try {
                 userDetailsService.save(new User(authenticationRequest.getUserName(),
                         authenticationRequest.getPassword(), new ArrayList<>(),
-                        Stream.of(new Role(RolesEnum.USER.toString())).collect(Collectors.toSet())));
+                        Stream.of(defaultRoleService.findRoleByName(RolesEnum.USER.toString())).collect(Collectors.toSet())));
                 return ResponseEntity.ok(new DefaultResponse("Registration Successful"));
             } catch (Exception exception) {
                 return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
@@ -58,5 +62,11 @@ public class RegistrationController {
         } else {
             return ResponseEntity.badRequest().body(new ErrorResponse("User already exists"));
         }
+    }
+
+    @PostMapping("/createRoles")
+    public ResponseEntity<?> createAllRoles() {
+        RolesEnum[] rolesEnums = defaultRoleService.createRoles();
+        return ResponseEntity.ok(new DefaultResponse("Roles created : " + rolesEnums));
     }
 }

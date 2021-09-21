@@ -1,6 +1,7 @@
 package com.svadhyaya.backend.service;
 
 import com.svadhyaya.backend.db.models.Role;
+import com.svadhyaya.backend.db.models.RolesEnum;
 import com.svadhyaya.backend.db.models.User;
 import com.svadhyaya.backend.repository.RoleRepository;
 import com.svadhyaya.backend.repository.UserRepository;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class DefaultUserDetailsService implements UserDetailsService {
@@ -39,7 +42,7 @@ public class DefaultUserDetailsService implements UserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
-        return new User(user.getUsername(), user.getPassword(), grantedAuthorities,user.getRoles());
+        return new User(user.getUsername(), user.getPassword(), grantedAuthorities, user.getRoles());
     }
 
     public User getUserFromRepoWithName(String username) {
@@ -48,7 +51,9 @@ public class DefaultUserDetailsService implements UserDetailsService {
 
     public void save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(new HashSet<>(roleRepository.findAll()));
+        user.setRoles(new HashSet<>(
+                Stream.of(roleRepository.findByName(RolesEnum.USER.name()))
+                        .collect(Collectors.toSet())));
         userRepository.save(user);
     }
 
