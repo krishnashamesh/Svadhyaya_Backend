@@ -11,17 +11,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Entity
 @Table(name = "users")
@@ -31,6 +25,7 @@ public class User implements UserDetails, CredentialsContainer {
 
     private String password;
     @Id
+    @Column(nullable = false, unique = true)
     private String username;
     @JsonInclude()
     @Transient

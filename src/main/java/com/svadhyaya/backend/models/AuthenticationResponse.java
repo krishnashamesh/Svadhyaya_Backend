@@ -1,14 +1,30 @@
 package com.svadhyaya.backend.models;
 
+import java.util.List;
+
 public class AuthenticationResponse {
 
-    private final String jwt;
+    private final String jwtToken;
 
-    public AuthenticationResponse(String jwt) {
-        this.jwt = jwt;
+    private final String refreshToken;
+
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public String getJwt() {
-        return jwt;
+    private final List<String> roles;
+
+    public AuthenticationResponse(String jwtToken, String refreshToken, List<String> roles) {
+        this.jwtToken = jwtToken;
+        this.refreshToken = refreshToken;
+        this.roles = roles;
+    }
+
+    public String getJwtToken() {
+        return jwtToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 }
