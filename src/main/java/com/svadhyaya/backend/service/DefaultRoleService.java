@@ -1,7 +1,7 @@
 package com.svadhyaya.backend.service;
 
 import com.svadhyaya.backend.db.models.Role;
-import com.svadhyaya.backend.db.models.RolesEnum;
+import com.svadhyaya.backend.db.models.enums.RolesEnum;
 import com.svadhyaya.backend.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

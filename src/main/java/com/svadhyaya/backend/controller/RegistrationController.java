@@ -1,8 +1,7 @@
 package com.svadhyaya.backend.controller;
 
-import com.svadhyaya.backend.db.models.Role;
-import com.svadhyaya.backend.db.models.RolesEnum;
 import com.svadhyaya.backend.db.models.User;
+import com.svadhyaya.backend.db.models.enums.RolesEnum;
 import com.svadhyaya.backend.models.AuthenticationRequest;
 import com.svadhyaya.backend.models.DefaultResponse;
 import com.svadhyaya.backend.models.ErrorResponse;
