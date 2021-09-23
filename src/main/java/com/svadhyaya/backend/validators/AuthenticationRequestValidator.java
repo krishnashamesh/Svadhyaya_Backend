@@ -1,7 +1,6 @@
 package com.svadhyaya.backend.validators;
 
-import com.svadhyaya.backend.db.models.User;
-import com.svadhyaya.backend.models.AuthenticationRequest;
+import com.svadhyaya.backend.models.request.AuthenticationRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

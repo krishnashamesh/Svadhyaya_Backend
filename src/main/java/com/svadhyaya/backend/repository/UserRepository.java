@@ -1,9 +1,8 @@
 package com.svadhyaya.backend.repository;
 
-import com.svadhyaya.backend.db.models.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import com.svadhyaya.backend.db.models.UserModel;
+import com.svadhyaya.backend.repository.template.SvadhyayaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String username);
+public interface UserRepository extends SvadhyayaRepository<UserModel, Long> {
+    UserModel findByUsername(String username);
 }

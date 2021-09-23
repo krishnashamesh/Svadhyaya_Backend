@@ -1,7 +1,7 @@
 package com.svadhyaya.backend.service;
 
-import com.svadhyaya.backend.db.models.Role;
-import com.svadhyaya.backend.db.models.User;
+import com.svadhyaya.backend.db.models.RoleModel;
+import com.svadhyaya.backend.db.models.UserModel;
 import com.svadhyaya.backend.db.models.enums.RolesEnum;
 import com.svadhyaya.backend.repository.RoleRepository;
 import com.svadhyaya.backend.repository.UserRepository;
@@ -34,27 +34,27 @@ public class DefaultUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) {
-        User user = getUserFromRepoWithName(username);
+        UserModel user = getUserFromRepoWithName(username);
         if (user == null) throw new UsernameNotFoundException(username);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (Role role : user.getRoles()) {
+        for (RoleModel role : user.getRoles()) {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
-        return new User(user.getUsername(), user.getPassword(), grantedAuthorities, user.getRoles());
+        return new UserModel(user.getUsername(), user.getPassword(), grantedAuthorities, user.getRoles());
     }
 
-    public User getUserFromRepoWithName(String username) {
+    public UserModel getUserFromRepoWithName(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public void save(User user) {
+    public void save(UserModel user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(new HashSet<>(
                 Stream.of(roleRepository.findByName(RolesEnum.USER.name()))
                         .collect(Collectors.toSet())));
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
     }
 
     public RoleRepository getRoleRepository() {

@@ -1,4 +1,4 @@
-package com.svadhyaya.backend.models;
+package com.svadhyaya.backend.models.request;
 
 import javax.validation.constraints.NotBlank;
 

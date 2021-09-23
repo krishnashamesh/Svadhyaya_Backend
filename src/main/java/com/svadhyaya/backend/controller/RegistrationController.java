@@ -1,10 +1,10 @@
 package com.svadhyaya.backend.controller;
 
-import com.svadhyaya.backend.db.models.User;
+import com.svadhyaya.backend.db.models.UserModel;
 import com.svadhyaya.backend.db.models.enums.RolesEnum;
-import com.svadhyaya.backend.models.AuthenticationRequest;
-import com.svadhyaya.backend.models.DefaultResponse;
-import com.svadhyaya.backend.models.ErrorResponse;
+import com.svadhyaya.backend.models.data.DefaultResponseData;
+import com.svadhyaya.backend.models.data.ErrorResponseData;
+import com.svadhyaya.backend.models.request.AuthenticationRequest;
 import com.svadhyaya.backend.service.DefaultRoleService;
 import com.svadhyaya.backend.service.DefaultUserDetailsService;
 import com.svadhyaya.backend.validators.AuthenticationRequestValidator;
@@ -45,27 +45,27 @@ public class RegistrationController {
                                           Errors errors) throws Exception {
 
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(new ErrorResponse(errors.getAllErrors()
+            return ResponseEntity.badRequest().body(new ErrorResponseData(errors.getAllErrors()
                     .stream().map(er -> er.getCode()).collect(Collectors.toList()).toString()));
         }
 
         if (Objects.isNull(userDetailsService.getUserFromRepoWithName(authenticationRequest.getUserName()))) {
             try {
-                userDetailsService.save(new User(authenticationRequest.getUserName(),
+                userDetailsService.save(new UserModel(authenticationRequest.getUserName(),
                         authenticationRequest.getPassword(), new ArrayList<>(),
                         Stream.of(defaultRoleService.findRoleByName(RolesEnum.USER.toString())).collect(Collectors.toSet())));
-                return ResponseEntity.ok(new DefaultResponse("Registration Successful"));
+                return ResponseEntity.ok(new DefaultResponseData("Registration Successful"));
             } catch (Exception exception) {
-                return ResponseEntity.badRequest().body(new ErrorResponse(exception.getMessage()));
+                return ResponseEntity.badRequest().body(new ErrorResponseData(exception.getMessage()));
             }
         } else {
-            return ResponseEntity.badRequest().body(new ErrorResponse("User already exists"));
+            return ResponseEntity.badRequest().body(new ErrorResponseData("UserModel already exists"));
         }
     }
 
     @PostMapping("/createRoles")
     public ResponseEntity<?> createAllRoles() {
         RolesEnum[] rolesEnums = defaultRoleService.createRoles();
-        return ResponseEntity.ok(new DefaultResponse("Roles created : " + rolesEnums));
+        return ResponseEntity.ok(new DefaultResponseData("Roles created : " + rolesEnums));
     }
 }

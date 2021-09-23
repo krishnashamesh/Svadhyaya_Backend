@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Entity(name = "refreshtoken")
-public class RefreshToken {
+public class RefreshTokenModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -12,12 +12,12 @@ public class RefreshToken {
 
     @OneToOne
     @JoinColumn(name = "username", referencedColumnName = "username")
-    private User user;
+    private UserModel user;
 
-    public RefreshToken() {
+    public RefreshTokenModel() {
     }
 
-    public RefreshToken(User user, String token, Instant expiryDate) {
+    public RefreshTokenModel(UserModel user, String token, Instant expiryDate) {
         this.user = user;
         this.token = token;
         this.expiryDate = expiryDate;
@@ -37,11 +37,11 @@ public class RefreshToken {
         this.id = id;
     }
 
-    public User getUser() {
+    public UserModel getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserModel user) {
         this.user = user;
     }
 

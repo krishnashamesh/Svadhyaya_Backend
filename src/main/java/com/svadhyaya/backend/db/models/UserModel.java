@@ -19,9 +19,9 @@ import java.util.function.Function;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails, CredentialsContainer {
+public class UserModel implements UserDetails, CredentialsContainer {
 
-    private static final Log logger = LogFactory.getLog(User.class);
+    private static final Log logger = LogFactory.getLog(UserModel.class);
 
     private String password;
     @Id
@@ -36,16 +36,16 @@ public class User implements UserDetails, CredentialsContainer {
     private boolean enabled;
 
     @ManyToMany
-    private Set<Role> roles;
+    private Set<RoleModel> roles;
 
-    public User() {
+    public UserModel() {
     }
 
-    public User(String username, String password, Collection<? extends GrantedAuthority> authorities, Set<Role> roles) {
-        this(username, password, true, true, true, true, authorities,roles);
+    public UserModel(String username, String password, Collection<? extends GrantedAuthority> authorities, Set<RoleModel> roles) {
+        this(username, password, true, true, true, true, authorities, roles);
     }
 
-    public User(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities,Set<Role> roles) {
+    public UserModel(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities, Set<RoleModel> roles) {
         Assert.isTrue(username != null && !"".equals(username) && password != null, "Cannot pass null or empty values to constructor");
         this.username = username;
         this.password = password;
@@ -54,7 +54,7 @@ public class User implements UserDetails, CredentialsContainer {
         this.credentialsNonExpired = credentialsNonExpired;
         this.accountNonLocked = accountNonLocked;
         this.authorities = Collections.unmodifiableSet(sortAuthorities(authorities));
-        this.roles=Collections.unmodifiableSet(roles);
+        this.roles = Collections.unmodifiableSet(roles);
     }
 
     public Collection<GrantedAuthority> getAuthorities() {
@@ -91,7 +91,7 @@ public class User implements UserDetails, CredentialsContainer {
 
     private static SortedSet<GrantedAuthority> sortAuthorities(Collection<? extends GrantedAuthority> authorities) {
         Assert.notNull(authorities, "Cannot pass a null GrantedAuthority collection");
-        SortedSet<GrantedAuthority> sortedAuthorities = new TreeSet(new User.AuthorityComparator());
+        SortedSet<GrantedAuthority> sortedAuthorities = new TreeSet(new UserModel.AuthorityComparator());
         Iterator var2 = authorities.iterator();
 
         while (var2.hasNext()) {
@@ -104,7 +104,8 @@ public class User implements UserDetails, CredentialsContainer {
     }
 
     public boolean equals(Object obj) {
-        return obj instanceof org.springframework.security.core.userdetails.User ? this.username.equals(((User) obj).username) : false;
+        return obj instanceof UserModel ?
+                this.username.equals(((UserModel) obj).username) : false;
     }
 
     public int hashCode() {
@@ -124,27 +125,27 @@ public class User implements UserDetails, CredentialsContainer {
         return sb.toString();
     }
 
-    public static User.UserBuilder withUsername(String username) {
+    public static UserModel.UserBuilder withUsername(String username) {
         return builder().username(username);
     }
 
     public static UserBuilder builder() {
-        return new User.UserBuilder();
+        return new UserModel.UserBuilder();
     }
 
     /**
      * @deprecated
      */
     @Deprecated
-    public static User.UserBuilder withDefaultPasswordEncoder() {
-        logger.warn("User.withDefaultPasswordEncoder() is considered unsafe for production and is only intended for sample applications.");
+    public static UserModel.UserBuilder withDefaultPasswordEncoder() {
+        logger.warn("UserModel.withDefaultPasswordEncoder() is considered unsafe for production and is only intended for sample applications.");
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        User.UserBuilder var10000 = builder();
+        UserModel.UserBuilder var10000 = builder();
         Objects.requireNonNull(encoder);
         return var10000.passwordEncoder(encoder::encode);
     }
 
-    public static User.UserBuilder withUserDetails(UserDetails userDetails) {
+    public static UserModel.UserBuilder withUserDetails(UserDetails userDetails) {
         return withUsername(userDetails.getUsername()).password(userDetails.getPassword()).accountExpired(!userDetails.isAccountNonExpired()).accountLocked(!userDetails.isAccountNonLocked()).authorities(userDetails.getAuthorities()).credentialsExpired(!userDetails.isCredentialsNonExpired()).disabled(!userDetails.isEnabled());
     }
 
@@ -164,25 +165,25 @@ public class User implements UserDetails, CredentialsContainer {
             };
         }
 
-        public User.UserBuilder username(String username) {
+        public UserModel.UserBuilder username(String username) {
             Assert.notNull(username, "username cannot be null");
             this.username = username;
             return this;
         }
 
-        public User.UserBuilder password(String password) {
+        public UserModel.UserBuilder password(String password) {
             Assert.notNull(password, "password cannot be null");
             this.password = password;
             return this;
         }
 
-        public User.UserBuilder passwordEncoder(Function<String, String> encoder) {
+        public UserModel.UserBuilder passwordEncoder(Function<String, String> encoder) {
             Assert.notNull(encoder, "encoder cannot be null");
             this.passwordEncoder = encoder;
             return this;
         }
 
-        public User.UserBuilder roles(String... roles) {
+        public UserModel.UserBuilder roles(String... roles) {
             List<GrantedAuthority> authorities = new ArrayList(roles.length);
             String[] var3 = roles;
             int var4 = roles.length;
@@ -198,35 +199,35 @@ public class User implements UserDetails, CredentialsContainer {
             return this.authorities((Collection) authorities);
         }
 
-        public User.UserBuilder authorities(GrantedAuthority... authorities) {
+        public UserModel.UserBuilder authorities(GrantedAuthority... authorities) {
             return this.authorities((Collection) Arrays.asList(authorities));
         }
 
-        public User.UserBuilder authorities(Collection<? extends GrantedAuthority> authorities) {
+        public UserModel.UserBuilder authorities(Collection<? extends GrantedAuthority> authorities) {
             this.authorities = new ArrayList(authorities);
             return this;
         }
 
-        public User.UserBuilder authorities(String... authorities) {
+        public UserModel.UserBuilder authorities(String... authorities) {
             return this.authorities((Collection) AuthorityUtils.createAuthorityList(authorities));
         }
 
-        public User.UserBuilder accountExpired(boolean accountExpired) {
+        public UserModel.UserBuilder accountExpired(boolean accountExpired) {
             this.accountExpired = accountExpired;
             return this;
         }
 
-        public User.UserBuilder accountLocked(boolean accountLocked) {
+        public UserModel.UserBuilder accountLocked(boolean accountLocked) {
             this.accountLocked = accountLocked;
             return this;
         }
 
-        public User.UserBuilder credentialsExpired(boolean credentialsExpired) {
+        public UserModel.UserBuilder credentialsExpired(boolean credentialsExpired) {
             this.credentialsExpired = credentialsExpired;
             return this;
         }
 
-        public User.UserBuilder disabled(boolean disabled) {
+        public UserModel.UserBuilder disabled(boolean disabled) {
             this.disabled = disabled;
             return this;
         }
@@ -252,11 +253,11 @@ public class User implements UserDetails, CredentialsContainer {
         }
     }
 
-    public Set<Role> getRoles() {
+    public Set<RoleModel> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<RoleModel> roles) {
         this.roles = roles;
     }
 

@@ -1,8 +1,7 @@
 package com.svadhyaya.backend.validators;
 
-import com.svadhyaya.backend.db.models.User;
+import com.svadhyaya.backend.db.models.UserModel;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -10,12 +9,12 @@ import org.springframework.validation.Validator;
 public class UserValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
-        return User.class.equals(clazz);
+        return UserModel.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        User user = (User) target;
+        UserModel user = (UserModel) target;
         if (checkInputString(user.getUsername())) {
             errors.rejectValue("name", "name.empty");
         }

@@ -1,11 +1,11 @@
-package com.svadhyaya.backend.models;
+package com.svadhyaya.backend.models.data;
 
-public class TokenRefreshResponse {
+public class TokenRefreshData {
     private String accessToken;
 
     private String refreshToken;
 
-    public TokenRefreshResponse(String accessToken, String refreshToken) {
+    public TokenRefreshData(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }

@@ -1,6 +1,6 @@
 package com.svadhyaya.backend.service;
 
-import com.svadhyaya.backend.db.models.RefreshToken;
+import com.svadhyaya.backend.db.models.RefreshTokenModel;
 import com.svadhyaya.backend.exception.TokenRefreshException;
 import com.svadhyaya.backend.repository.RefreshTokenRepository;
 import com.svadhyaya.backend.repository.UserRepository;
@@ -24,22 +24,22 @@ public class DefaultRefreshTokenService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public Optional<RefreshToken> findByToken(String token) {
+    public Optional<RefreshTokenModel> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
     }
 
-    public RefreshToken createRefreshToken(String username) {
-        RefreshToken refreshToken = new RefreshToken();
+    public RefreshTokenModel createRefreshToken(String username) {
+        RefreshTokenModel refreshToken = new RefreshTokenModel();
 
         refreshToken.setUser(userRepository.findByUsername(username));
         refreshToken.setExpiryDate(Instant.now().plusMillis(jwtUtil.getRefreshExpiryDate()));
         refreshToken.setToken(UUID.randomUUID().toString());
 
-        refreshToken = refreshTokenRepository.save(refreshToken);
+        refreshToken = refreshTokenRepository.saveAndFlush(refreshToken);
         return refreshToken;
     }
 
-    public RefreshToken verifyExpiration(RefreshToken token) {
+    public RefreshTokenModel verifyExpiration(RefreshTokenModel token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
             throw new TokenRefreshException(token.getToken(), "Refresh token was expired. Please make a new signin request");

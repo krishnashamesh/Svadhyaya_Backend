@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "questionParameters")
-public class QuestionParameters {
+public class QuestionParametersModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,14 +23,14 @@ public class QuestionParameters {
 
     //TODO Figure out how to map this
     //@OneToMany
-    //private List<HistoricalSpotPrices> historicalSpotPrices;
+    //private List<HistoricalSpotPricesModel> historicalSpotPrices;
 
     private Double unitOptionsPrice;
     private Double unitOptionsExercisePrice;
 
     private Double revenueSharingPercentage;
 
-    public QuestionParameters() {
+    public QuestionParametersModel() {
     }
 
     public long getQuestionId() {

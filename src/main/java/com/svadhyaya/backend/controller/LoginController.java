@@ -1,8 +1,12 @@
 package com.svadhyaya.backend.controller;
 
-import com.svadhyaya.backend.db.models.RefreshToken;
+import com.svadhyaya.backend.db.models.RefreshTokenModel;
 import com.svadhyaya.backend.exception.TokenRefreshException;
-import com.svadhyaya.backend.models.*;
+import com.svadhyaya.backend.models.data.AuthenticationData;
+import com.svadhyaya.backend.models.data.ErrorResponseData;
+import com.svadhyaya.backend.models.data.TokenRefreshData;
+import com.svadhyaya.backend.models.request.AuthenticationRequest;
+import com.svadhyaya.backend.models.request.TokenRefreshRequest;
 import com.svadhyaya.backend.service.DefaultRefreshTokenService;
 import com.svadhyaya.backend.service.DefaultUserDetailsService;
 import com.svadhyaya.backend.util.JwtUtil;
@@ -46,31 +50,31 @@ public class LoginController {
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword()));
         } catch (BadCredentialsException exception) {
 
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Incorrect username or Password"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseData("Incorrect username or Password"));
         } catch (UsernameNotFoundException usernameNotFoundException) {
 
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not found, Please register"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseData("UserModel not found, Please register"));
         } catch (Throwable throwable) {
 
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Something went wrong"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseData("Something went wrong"));
         }
         UserDetails userDetails = null;
 
         try {
             userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUserName());
         } catch (UsernameNotFoundException usernameNotFoundException) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("User not found, Please register"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseData("UserModel not found, Please register"));
         }
         String jwtToken;
-        RefreshToken refreshToken;
+        RefreshTokenModel refreshToken;
         if (Objects.nonNull(userDetails)) {
             jwtToken = jwtUtil.generateToken(userDetails);
             refreshToken = refreshTokenService.createRefreshToken(userDetails.getUsername());
 
         } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("Something went wrong"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseData("Something went wrong"));
         }
-        return ResponseEntity.ok(new AuthenticationResponse(jwtToken, refreshToken.getToken(),
+        return ResponseEntity.ok(new AuthenticationData(jwtToken, refreshToken.getToken(),
                 userDetails.getAuthorities().stream()
                         .map(user -> user.getAuthority()).collect(Collectors.toList())));
     }
@@ -81,10 +85,10 @@ public class LoginController {
 
         return refreshTokenService.findByToken(requestRefreshToken)
                 .map(refreshTokenService::verifyExpiration)
-                .map(RefreshToken::getUser)
+                .map(RefreshTokenModel::getUser)
                 .map(user -> {
                     String token = jwtUtil.generateToken(userDetailsService.loadUserByUsername(user.getUsername()));
-                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+                    return ResponseEntity.ok(new TokenRefreshData(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
                         "Refresh token is not in database!"));

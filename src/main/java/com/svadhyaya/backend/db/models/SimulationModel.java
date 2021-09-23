@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "simulation")
-public class Simulation {
+public class SimulationModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -14,19 +14,27 @@ public class Simulation {
 
     @OneToOne
     @JoinColumn(name = "username", referencedColumnName = "username")
-    private User user;
+    private UserModel user;
 
     private String simulationType;
 
-    @OneToMany(targetEntity = SimulationEntry.class, mappedBy = "simulation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SimulationEntry> simulationEntries = new ArrayList<>();
+    @OneToMany(targetEntity = SimulationEntryModel.class, mappedBy = "simulation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SimulationEntryModel> simulationEntries = new ArrayList<>();
 
-    public Simulation() {
+    public SimulationModel() {
     }
 
-    public Simulation(User user, String simulationType) {
+    public SimulationModel(UserModel user, String simulationType) {
         this.user = user;
         this.simulationType = simulationType;
+    }
+
+    public List<SimulationEntryModel> getSimulationEntries() {
+        return simulationEntries;
+    }
+
+    public void setSimulationEntries(List<SimulationEntryModel> simulationEntries) {
+        this.simulationEntries = simulationEntries;
     }
 
     public long getSimulationId() {
@@ -37,11 +45,11 @@ public class Simulation {
         this.simulationId = simulationId;
     }
 
-    public User getUser() {
+    public UserModel getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserModel user) {
         this.user = user;
     }
 

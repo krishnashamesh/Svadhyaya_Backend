@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Service
@@ -59,5 +61,23 @@ public class JwtUtil {
 
     public Integer getRefreshExpiryDate() {
         return Integer.valueOf(this.configUtil.getProperty("jwt.refresh.expire.timeinms"));
+    }
+
+    public String getUserNamefromRequest(HttpServletRequest request) {
+        final String authorizationHeader = request.getHeader("Authorization");
+        String userName = null;
+        if (Objects.nonNull(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            userName = extractUsername(authorizationHeader.substring(7));
+        }
+        return userName;
+    }
+
+    public String getJwtTokenfromRequest(HttpServletRequest request) {
+        final String authorizationHeader = request.getHeader("Authorization");
+        String jwtToken = null;
+        if (Objects.nonNull(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            jwtToken = authorizationHeader.substring(7);
+        }
+        return jwtToken;
     }
 }

@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "simulationEntry")
-public class SimulationEntry {
+public class SimulationEntryModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -12,7 +12,7 @@ public class SimulationEntry {
 
     @ManyToOne
     @JoinColumn(name = "simulationId")
-    private Simulation simulation;
+    private SimulationModel simulation;
 
     private int roundId;
 
@@ -20,13 +20,13 @@ public class SimulationEntry {
 
     @OneToOne
     @JoinColumn(name = "questionId", referencedColumnName = "questionId")
-    private QuestionParameters questionParameters;
+    private QuestionParametersModel questionParameters;
 
     @OneToOne
     @JoinColumn(name = "roundResultDetailsId", referencedColumnName = "roundResultDetailsId")
-    private RoundResultDetails roundResultDetails;
+    private RoundResultDetailsModel roundResultDetails;
 
-    public SimulationEntry() {
+    public SimulationEntryModel() {
     }
 
     public long getSimulationEntryId() {
@@ -37,11 +37,11 @@ public class SimulationEntry {
         this.simulationEntryId = simulationEntryId;
     }
 
-    public Simulation getSimulation() {
+    public SimulationModel getSimulation() {
         return simulation;
     }
 
-    public void setSimulation(Simulation simulation) {
+    public void setSimulation(SimulationModel simulation) {
         this.simulation = simulation;
     }
 
@@ -61,11 +61,19 @@ public class SimulationEntry {
         this.iterationId = iterationId;
     }
 
-    public QuestionParameters getQuestionParameters() {
+    public QuestionParametersModel getQuestionParameters() {
         return questionParameters;
     }
 
-    public void setQuestionParameters(QuestionParameters questionParameters) {
+    public void setQuestionParameters(QuestionParametersModel questionParameters) {
         this.questionParameters = questionParameters;
+    }
+
+    public RoundResultDetailsModel getRoundResultDetails() {
+        return roundResultDetails;
+    }
+
+    public void setRoundResultDetails(RoundResultDetailsModel roundResultDetails) {
+        this.roundResultDetails = roundResultDetails;
     }
 }
