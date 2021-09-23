@@ -6,6 +6,8 @@ public class RoundResultDetailsData {
 
     private long roundResultDetailsId;
 
+    private int iterationId;
+
     private BigDecimal actualDemand;
 
     private BigDecimal orderedQuantity;
@@ -96,5 +98,13 @@ public class RoundResultDetailsData {
 
     public void setIdealProfitOrLoss(BigDecimal idealProfitOrLoss) {
         this.idealProfitOrLoss = idealProfitOrLoss;
+    }
+
+    public int getIterationId() {
+        return iterationId;
+    }
+
+    public void setIterationId(int iterationId) {
+        this.iterationId = iterationId;
     }
 }

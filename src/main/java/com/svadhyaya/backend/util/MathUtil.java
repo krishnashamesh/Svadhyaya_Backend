@@ -29,7 +29,7 @@ public class MathUtil {
     public BigDecimal getActualDemand(BigDecimal meanQuantity, BigDecimal varianceQuantity) {
         return round(BigDecimal.valueOf(new Random().nextGaussian())
                 .multiply(varianceQuantity)
-                .add(meanQuantity), 2);
+                .add(meanQuantity), 0);
     }
 
     public BigDecimal getIdealOrderQuantity(BigDecimal wholeSalePrice, BigDecimal retailPrice, BigDecimal salvagePrice, BigDecimal meanQuantity, BigDecimal varianceQuantity) {

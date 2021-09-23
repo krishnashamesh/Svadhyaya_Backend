@@ -1,6 +1,8 @@
 package com.svadhyaya.backend.db.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "simulationEntry")
@@ -16,15 +18,15 @@ public class SimulationEntryModel {
 
     private int roundId;
 
-    private int iterationId;
-
     @OneToOne
     @JoinColumn(name = "questionId", referencedColumnName = "questionId")
     private QuestionParametersModel questionParameters;
 
-    @OneToOne
-    @JoinColumn(name = "roundResultDetailsId", referencedColumnName = "roundResultDetailsId")
-    private RoundResultDetailsModel roundResultDetails;
+    @OneToMany(targetEntity = RoundResultDetailsModel.class, mappedBy =
+            "simulationEntry", cascade = CascadeType.ALL, fetch =
+            FetchType.LAZY)
+    private List<RoundResultDetailsModel> RoundResultDetailsModels =
+            new ArrayList<>();
 
     public SimulationEntryModel() {
     }
@@ -53,13 +55,6 @@ public class SimulationEntryModel {
         this.roundId = roundId;
     }
 
-    public int getIterationId() {
-        return iterationId;
-    }
-
-    public void setIterationId(int iterationId) {
-        this.iterationId = iterationId;
-    }
 
     public QuestionParametersModel getQuestionParameters() {
         return questionParameters;
@@ -69,11 +64,11 @@ public class SimulationEntryModel {
         this.questionParameters = questionParameters;
     }
 
-    public RoundResultDetailsModel getRoundResultDetails() {
-        return roundResultDetails;
+    public List<RoundResultDetailsModel> getRoundResultDetailsModels() {
+        return RoundResultDetailsModels;
     }
 
-    public void setRoundResultDetails(RoundResultDetailsModel roundResultDetails) {
-        this.roundResultDetails = roundResultDetails;
+    public void setRoundResultDetailsModels(List<RoundResultDetailsModel> roundResultDetailsModels) {
+        RoundResultDetailsModels = roundResultDetailsModels;
     }
 }

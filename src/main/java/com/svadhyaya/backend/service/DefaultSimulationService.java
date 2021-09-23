@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -59,30 +60,22 @@ public class DefaultSimulationService {
         return simulationRepository.findById(Long.valueOf(simulationId)).get();
     }
 
-    public SimulationModel setParametersForNextQuestion(SimulationModel simulation) {
+    public SimulationModel createNewRound(SimulationModel simulation) {
 
-        List<SimulationEntryModel> simulationEntryModels = simulation.getSimulationEntries();
         SimulationEntryModel simulationEntry = new SimulationEntryModel();
         simulationEntry.setSimulation(simulation);
 
-        RoundResultDetailsModel roundResultDetailsModel =
-                new RoundResultDetailsModel();
-        roundResultDetailsRepository.saveAndFlush(roundResultDetailsModel);
-
         QuestionParametersModel questionParameters = new QuestionParametersModel();
         questionParameters.setSimulationType(simulation.getSimulationType());
-        //TODO set questions here
         simulationEntry.setQuestionParameters(questionParameters);
-        simulationEntry.setRoundResultDetails(roundResultDetailsModel);
+        simulationEntry.setRoundResultDetailsModels(new ArrayList<RoundResultDetailsModel>());
+
         List<SimulationEntryModel> simulationEntries = simulationEntry.getSimulation().getSimulationEntries();
         if (CollectionUtils.isEmpty(simulationEntries) || (simulationEntries.get(simulationEntries.size() - 1).getRoundId() == 0)) {
             simulationEntry.setRoundId(1);
-            simulationEntry.setIterationId(1);
         } else {
-            simulationEntry.setRoundId(simulationEntry.getRoundId());
-            simulationEntry.setIterationId(simulationEntries.get(simulationEntries.size() - 1).getIterationId() + 1);
+            simulationEntry.setRoundId((simulationEntries.get(simulationEntries.size() - 1).getRoundId()) + 1);
         }
-
         questionParameters =
                 questionParametersService.setQuestionParameters(questionParameters);
 
@@ -93,5 +86,4 @@ public class DefaultSimulationService {
         simulationRepository.refresh(simulation);
         return simulation;
     }
-
 }

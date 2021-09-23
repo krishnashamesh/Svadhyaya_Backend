@@ -73,28 +73,13 @@ public class SimulationController {
         SimulationModel simulation =
                 simulationService.getSimulationModelById(simulationId);
 
-        //simulation = simulationService.createNewRound(simulation);
+        simulation = simulationService.createNewRound(simulation);
 
         SimulationData simulationData = new SimulationData();
         simulationPopulator.populate(simulation, simulationData);
 
         return ResponseEntity.ok(simulationData);
 
-    }
-
-    @PostMapping("/nextQuestion")
-    public ResponseEntity<?> nextQuestion(HttpServletRequest request
-            , HttpServletResponse response, String simulationId) {
-
-        SimulationModel simulation =
-                simulationService.getSimulationModelById(simulationId);
-
-        simulation = simulationService.setParametersForNextQuestion(simulation);
-
-        SimulationData simulationData = new SimulationData();
-        simulationPopulator.populate(simulation, simulationData);
-
-        return ResponseEntity.ok(simulationData);
     }
 
     @PostMapping("/answerQuestion")

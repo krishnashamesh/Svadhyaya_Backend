@@ -6,6 +6,7 @@ import com.svadhyaya.backend.db.models.SimulationEntryModel;
 import com.svadhyaya.backend.db.models.SimulationModel;
 import com.svadhyaya.backend.repository.QuestionParametersRepository;
 import com.svadhyaya.backend.repository.RoundResultDetailsRepository;
+import com.svadhyaya.backend.repository.SimulationEntryRepository;
 import com.svadhyaya.backend.repository.SimulationRepository;
 import com.svadhyaya.backend.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class DefaultQuestionParametersService {
 
     @Autowired
     private SimulationRepository simulationRepository;
+
+    @Autowired
+    private SimulationEntryRepository simulationEntryRepository;
 
     @Autowired
     private QuestionParametersRepository questionParametersRepository;
@@ -72,7 +76,9 @@ public class DefaultQuestionParametersService {
     public SimulationModel setAnswerForQuestion(SimulationModel simulation, SimulationEntryModel simulationEntryModel, QuestionParametersModel questionParametersModel, String orderQuantity) {
 
         RoundResultDetailsModel roundResultDetailsModel =
-                simulationEntryModel.getRoundResultDetails();
+                new RoundResultDetailsModel();
+
+        roundResultDetailsModel.setIterationId(simulationEntryModel.getRoundResultDetailsModels().size() + 1);
         roundResultDetailsModel.setOrderedQuantity(MathUtil.round(BigDecimal.valueOf(Double.valueOf(orderQuantity)), 0));
 
         BigDecimal meanQuantity = questionParametersModel.getMeanQuantity();
@@ -89,7 +95,7 @@ public class DefaultQuestionParametersService {
 
         roundResultDetailsModel.setRevenue(MathUtil.round(
                 retailPrice
-                        .multiply(actualDemand), 2));
+                        .multiply(actualDemand.compareTo(roundResultDetailsModel.getOrderedQuantity()) < 0 ? actualDemand : roundResultDetailsModel.getOrderedQuantity()), 2));
         roundResultDetailsModel.setCost(MathUtil.round(
                 costPerUnit
                         .multiply(roundResultDetailsModel.getOrderedQuantity()), 2));
@@ -107,7 +113,7 @@ public class DefaultQuestionParametersService {
 
         roundResultDetailsModel.setIdealRevenue(MathUtil.round(
                 retailPrice
-                        .multiply(actualDemand), 2));
+                        .multiply(actualDemand.compareTo(roundResultDetailsModel.getIdealOrderedQuantity()) < 0 ? actualDemand : roundResultDetailsModel.getIdealOrderedQuantity()), 2));
         roundResultDetailsModel.setIdealCost(MathUtil.round(
                 costPerUnit
                         .multiply(roundResultDetailsModel.getIdealOrderedQuantity()), 2));
@@ -116,7 +122,19 @@ public class DefaultQuestionParametersService {
                         .subtract(roundResultDetailsModel.getIdealCost()),
                 2));
 
+        roundResultDetailsModel.setSimulationEntry(simulationEntryModel);
         roundResultDetailsRepository.saveAndFlush(roundResultDetailsModel);
+        roundResultDetailsRepository.refresh(roundResultDetailsModel);
+        // List<RoundResultDetailsModel> roundResultDetailsModels =
+        //       new ArrayList<>(simulationEntryModel
+        //       .getRoundResultDetailsModels());
+        // roundResultDetailsModels.add(roundResultDetailsModel);
+        // simulationEntryModel.setRoundResultDetailsModels
+        // (roundResultDetailsModels);
+
+        // simulationEntryRepository.saveAndFlush(simulationEntryModel);
+
+        simulationEntryRepository.refresh(simulationEntryModel);
         simulationRepository.refresh(simulation);
 
         return simulation;

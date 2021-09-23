@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -27,13 +26,7 @@ public class SimulationPopulator implements Populator<SimulationModel, Simulatio
         List<SimulationEntryModel> simulationEntries = simulationModel.getSimulationEntries();
         if (!CollectionUtils.isEmpty(simulationEntries)) {
 
-            //Get the latest Question if population of all entries
-            // is not required
-            List<SimulationEntryModel> simulationEntryModels =
-                    simulationData.isPopulateAllEntries() ? simulationEntries :
-                            Arrays.asList(simulationEntries.get(simulationEntries.size() - 1));
-
-            for (SimulationEntryModel simulationEntryModel : simulationEntryModels) {
+            for (SimulationEntryModel simulationEntryModel : simulationEntries) {
                 SimulationEntryData simulationEntryData =
                         new SimulationEntryData();
                 simulationEntryPopulator.populate(simulationEntryModel, simulationEntryData);
@@ -42,7 +35,6 @@ public class SimulationPopulator implements Populator<SimulationModel, Simulatio
                                 new ArrayList<>(simulationData.getSimulationEntries());
                 simulationEntryDataList.add(simulationEntryData);
                 simulationData.setSimulationEntries(simulationEntryDataList);
-
             }
         }
     }

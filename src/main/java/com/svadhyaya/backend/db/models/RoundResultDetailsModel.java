@@ -11,6 +11,12 @@ public class RoundResultDetailsModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long roundResultDetailsId;
 
+    @ManyToOne
+    @JoinColumn(name = "simulationEntryId")
+    private SimulationEntryModel simulationEntry;
+
+    private int iterationId;
+
     private BigDecimal actualDemand;
 
     private BigDecimal orderedQuantity;
@@ -107,5 +113,21 @@ public class RoundResultDetailsModel {
 
     public void setIdealProfitOrLoss(BigDecimal idealProfitOrLoss) {
         this.idealProfitOrLoss = idealProfitOrLoss;
+    }
+
+    public SimulationEntryModel getSimulationEntry() {
+        return simulationEntry;
+    }
+
+    public void setSimulationEntry(SimulationEntryModel simulationEntry) {
+        this.simulationEntry = simulationEntry;
+    }
+
+    public int getIterationId() {
+        return iterationId;
+    }
+
+    public void setIterationId(int iterationId) {
+        this.iterationId = iterationId;
     }
 }

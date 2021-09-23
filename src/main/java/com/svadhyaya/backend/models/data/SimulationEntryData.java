@@ -1,12 +1,13 @@
 package com.svadhyaya.backend.models.data;
 
+import java.util.List;
+
 public class SimulationEntryData {
 
     private long simulationEntryId;
     private int roundId;
-    private int iterationId;
     private QuestionParametersData questionParameters;
-    private RoundResultDetailsData roundResultDetails;
+    private List<RoundResultDetailsData> roundResultDetailsDataList;
 
     public long getSimulationEntryId() {
         return simulationEntryId;
@@ -24,13 +25,6 @@ public class SimulationEntryData {
         this.roundId = roundId;
     }
 
-    public int getIterationId() {
-        return iterationId;
-    }
-
-    public void setIterationId(int iterationId) {
-        this.iterationId = iterationId;
-    }
 
     public QuestionParametersData getQuestionParameters() {
         return questionParameters;
@@ -40,11 +34,11 @@ public class SimulationEntryData {
         this.questionParameters = questionParameters;
     }
 
-    public RoundResultDetailsData getRoundResultDetails() {
-        return roundResultDetails;
+    public List<RoundResultDetailsData> getRoundResultDetailsDataList() {
+        return roundResultDetailsDataList;
     }
 
-    public void setRoundResultDetails(RoundResultDetailsData roundResultDetails) {
-        this.roundResultDetails = roundResultDetails;
+    public void setRoundResultDetailsDataList(List<RoundResultDetailsData> roundResultDetailsDataList) {
+        this.roundResultDetailsDataList = roundResultDetailsDataList;
     }
 }

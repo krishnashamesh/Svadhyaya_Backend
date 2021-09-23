@@ -10,6 +10,7 @@ public class RoundResultDetailsPopulator implements Populator<RoundResultDetails
     @Override
     public void populate(RoundResultDetailsModel roundResultDetailsModel, RoundResultDetailsData roundResultDetailsData) {
 
+        roundResultDetailsData.setIterationId(roundResultDetailsModel.getIterationId());
         roundResultDetailsData.setRoundResultDetailsId(roundResultDetailsModel.getRoundResultDetailsId());
         roundResultDetailsData.setActualDemand(roundResultDetailsModel.getActualDemand());
 
