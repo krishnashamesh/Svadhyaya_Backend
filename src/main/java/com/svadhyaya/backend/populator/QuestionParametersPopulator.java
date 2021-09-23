@@ -11,5 +11,17 @@ public class QuestionParametersPopulator implements Populator<QuestionParameters
     @Override
     public void populate(QuestionParametersModel questionParametersModel, QuestionParametersData questionParametersData) {
         questionParametersData.setQuestionId(questionParametersModel.getQuestionId());
+
+        questionParametersData.setMeanQuantity(questionParametersModel.getMeanQuantity());
+        questionParametersData.setVarianceQuantity(questionParametersModel.getVarianceQuantity());
+
+        questionParametersData.setWholeSalePrice(questionParametersModel.getWholeSalePrice());
+        questionParametersData.setRetailPrice(questionParametersModel.getRetailPrice());
+        questionParametersData.setSalvagePrice(questionParametersModel.getSalvagePrice());
+        questionParametersData.setCostPerUnit(questionParametersModel.getCostPerUnit());
+        questionParametersData.setRevenueSharingPercentage(questionParametersModel.getRevenueSharingPercentage());
+        questionParametersData.setUnitOptionsExercisePrice(questionParametersModel.getUnitOptionsExercisePrice());
+        questionParametersData.setUnitOptionsPrice(questionParametersModel.getUnitOptionsPrice());
+
     }
 }

@@ -15,6 +15,9 @@ public class DefaultSimulationService {
     private DefaultUserDetailsService userDetailsService;
 
     @Autowired
+    private DefaultQuestionParametersService questionParametersService;
+
+    @Autowired
     private SimulationRepository simulationRepository;
 
     @Autowired
@@ -35,26 +38,7 @@ public class DefaultSimulationService {
 
         SimulationModel simulation = new SimulationModel(user, simulationType);
 
-        SimulationEntryModel simulationEntry = new SimulationEntryModel();
-        simulationEntry.setSimulation(simulation);
-
-        RoundResultDetailsModel roundResultDetailsModel =
-                new RoundResultDetailsModel();
-
-        QuestionParametersModel questionParameters = new QuestionParametersModel();
-        questionParameters.setSimulationType(simulationType);
-        //TODO set questions here
-        simulationEntry.setQuestionParameters(questionParameters);
-        simulationEntry.setRoundResultDetails(roundResultDetailsModel);
-        simulationEntry.setRoundId(1);
-        simulationEntry.setIterationId(1);
-
-
-        questionParametersRepository.saveAndFlush(questionParameters);
-        roundResultDetailsRepository.saveAndFlush(roundResultDetailsModel);
         simulationRepository.saveAndFlush(simulation);
-        simulationEntryRepository.saveAndFlush(simulationEntry);
-
         simulationRepository.refresh(simulation);
 
         return simulation;
@@ -70,4 +54,44 @@ public class DefaultSimulationService {
             return createSimulation(username, simulationType);
         }
     }
+
+    public SimulationModel getSimulationModelById(String simulationId) {
+        return simulationRepository.findById(Long.valueOf(simulationId)).get();
+    }
+
+    public SimulationModel setParametersForNextQuestion(SimulationModel simulation) {
+
+        List<SimulationEntryModel> simulationEntryModels = simulation.getSimulationEntries();
+        SimulationEntryModel simulationEntry = new SimulationEntryModel();
+        simulationEntry.setSimulation(simulation);
+
+        RoundResultDetailsModel roundResultDetailsModel =
+                new RoundResultDetailsModel();
+        roundResultDetailsRepository.saveAndFlush(roundResultDetailsModel);
+
+        QuestionParametersModel questionParameters = new QuestionParametersModel();
+        questionParameters.setSimulationType(simulation.getSimulationType());
+        //TODO set questions here
+        simulationEntry.setQuestionParameters(questionParameters);
+        simulationEntry.setRoundResultDetails(roundResultDetailsModel);
+        List<SimulationEntryModel> simulationEntries = simulationEntry.getSimulation().getSimulationEntries();
+        if (CollectionUtils.isEmpty(simulationEntries) || (simulationEntries.get(simulationEntries.size() - 1).getRoundId() == 0)) {
+            simulationEntry.setRoundId(1);
+            simulationEntry.setIterationId(1);
+        } else {
+            simulationEntry.setRoundId(simulationEntry.getRoundId());
+            simulationEntry.setIterationId(simulationEntries.get(simulationEntries.size() - 1).getIterationId() + 1);
+        }
+
+        questionParameters =
+                questionParametersService.setQuestionParameters(questionParameters);
+
+        questionParametersRepository.saveAndFlush(questionParameters);
+        simulationRepository.saveAndFlush(simulation);
+        simulationEntryRepository.saveAndFlush(simulationEntry);
+
+        simulationRepository.refresh(simulation);
+        return simulation;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.svadhyaya.backend.db.models;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "questionParameters")
@@ -12,25 +13,28 @@ public class QuestionParametersModel {
 
     private String simulationType;
 
-    private Double wholeSalePrice;
-    private Double retailPrice;
-    private Double salvagePrice;
-    private Double meanQuantity;
-    private Double varianceQuantity;
-    private Double costPerUnit;
+    private BigDecimal wholeSalePrice;
+    private BigDecimal retailPrice;
+    private BigDecimal salvagePrice;
+    private BigDecimal meanQuantity;
+    private BigDecimal varianceQuantity;
+    private BigDecimal costPerUnit;
 
-    private Double actualDemand;
 
     //TODO Figure out how to map this
     //@OneToMany
     //private List<HistoricalSpotPricesModel> historicalSpotPrices;
 
-    private Double unitOptionsPrice;
-    private Double unitOptionsExercisePrice;
+    private BigDecimal unitOptionsPrice;
+    private BigDecimal unitOptionsExercisePrice;
 
-    private Double revenueSharingPercentage;
+    private BigDecimal revenueSharingPercentage;
 
     public QuestionParametersModel() {
+        wholeSalePrice = retailPrice = salvagePrice = meanQuantity =
+                varianceQuantity = costPerUnit = unitOptionsPrice =
+                        unitOptionsExercisePrice =
+                                revenueSharingPercentage = BigDecimal.ZERO;
     }
 
     public long getQuestionId() {
@@ -49,75 +53,75 @@ public class QuestionParametersModel {
         this.simulationType = simulationType;
     }
 
-    public Double getWholeSalePrice() {
+    public BigDecimal getWholeSalePrice() {
         return wholeSalePrice;
     }
 
-    public void setWholeSalePrice(Double wholeSalePrice) {
+    public void setWholeSalePrice(BigDecimal wholeSalePrice) {
         this.wholeSalePrice = wholeSalePrice;
     }
 
-    public Double getRetailPrice() {
+    public BigDecimal getRetailPrice() {
         return retailPrice;
     }
 
-    public void setRetailPrice(Double retailPrice) {
+    public void setRetailPrice(BigDecimal retailPrice) {
         this.retailPrice = retailPrice;
     }
 
-    public Double getSalvagePrice() {
+    public BigDecimal getSalvagePrice() {
         return salvagePrice;
     }
 
-    public void setSalvagePrice(Double salvagePrice) {
+    public void setSalvagePrice(BigDecimal salvagePrice) {
         this.salvagePrice = salvagePrice;
     }
 
-    public Double getMeanQuantity() {
+    public BigDecimal getMeanQuantity() {
         return meanQuantity;
     }
 
-    public void setMeanQuantity(Double meanQuantity) {
+    public void setMeanQuantity(BigDecimal meanQuantity) {
         this.meanQuantity = meanQuantity;
     }
 
-    public Double getVarianceQuantity() {
+    public BigDecimal getVarianceQuantity() {
         return varianceQuantity;
     }
 
-    public void setVarianceQuantity(Double varianceQuantity) {
+    public void setVarianceQuantity(BigDecimal varianceQuantity) {
         this.varianceQuantity = varianceQuantity;
     }
 
-    public Double getCostPerUnit() {
+    public BigDecimal getCostPerUnit() {
         return costPerUnit;
     }
 
-    public void setCostPerUnit(Double costPerUnit) {
+    public void setCostPerUnit(BigDecimal costPerUnit) {
         this.costPerUnit = costPerUnit;
     }
 
-    public Double getUnitOptionsPrice() {
+    public BigDecimal getUnitOptionsPrice() {
         return unitOptionsPrice;
     }
 
-    public void setUnitOptionsPrice(Double unitOptionsPrice) {
+    public void setUnitOptionsPrice(BigDecimal unitOptionsPrice) {
         this.unitOptionsPrice = unitOptionsPrice;
     }
 
-    public Double getUnitOptionsExercisePrice() {
+    public BigDecimal getUnitOptionsExercisePrice() {
         return unitOptionsExercisePrice;
     }
 
-    public void setUnitOptionsExercisePrice(Double unitOptionsExercisePrice) {
+    public void setUnitOptionsExercisePrice(BigDecimal unitOptionsExercisePrice) {
         this.unitOptionsExercisePrice = unitOptionsExercisePrice;
     }
 
-    public Double getRevenueSharingPercentage() {
+    public BigDecimal getRevenueSharingPercentage() {
         return revenueSharingPercentage;
     }
 
-    public void setRevenueSharingPercentage(Double revenueSharingPercentage) {
+    public void setRevenueSharingPercentage(BigDecimal revenueSharingPercentage) {
         this.revenueSharingPercentage = revenueSharingPercentage;
     }
 }

@@ -33,5 +33,8 @@ public class SimulationEntryPopulator implements Populator<SimulationEntryModel,
 
         simulationEntryData.setQuestionParameters(questionParametersData);
         simulationEntryData.setRoundResultDetails(roundResultDetailsData);
+
+        simulationEntryData.setIterationId(simulationEntryModel.getIterationId());
+        simulationEntryData.setRoundId(simulationEntryModel.getRoundId());
     }
 }

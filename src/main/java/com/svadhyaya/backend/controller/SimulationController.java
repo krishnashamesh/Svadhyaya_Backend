@@ -1,10 +1,13 @@
 package com.svadhyaya.backend.controller;
 
+import com.svadhyaya.backend.db.models.QuestionParametersModel;
+import com.svadhyaya.backend.db.models.SimulationEntryModel;
 import com.svadhyaya.backend.db.models.SimulationModel;
 import com.svadhyaya.backend.db.models.enums.SimulationTypeEnum;
 import com.svadhyaya.backend.models.data.ErrorResponseData;
 import com.svadhyaya.backend.models.data.SimulationData;
 import com.svadhyaya.backend.populator.SimulationPopulator;
+import com.svadhyaya.backend.service.DefaultQuestionParametersService;
 import com.svadhyaya.backend.service.DefaultSimulationService;
 import com.svadhyaya.backend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ public class SimulationController {
 
     @Autowired
     private DefaultSimulationService simulationService;
+
+    @Autowired
+    private DefaultQuestionParametersService questionParametersService;
 
     @Autowired
     private SimulationPopulator simulationPopulator;
@@ -60,4 +66,67 @@ public class SimulationController {
 
     }
 
+    @PostMapping("/createRound")
+    public ResponseEntity<?> createRound(HttpServletRequest request
+            , HttpServletResponse response, String simulationId) {
+
+        SimulationModel simulation =
+                simulationService.getSimulationModelById(simulationId);
+
+        //simulation = simulationService.createNewRound(simulation);
+
+        SimulationData simulationData = new SimulationData();
+        simulationPopulator.populate(simulation, simulationData);
+
+        return ResponseEntity.ok(simulationData);
+
+    }
+
+    @PostMapping("/nextQuestion")
+    public ResponseEntity<?> nextQuestion(HttpServletRequest request
+            , HttpServletResponse response, String simulationId) {
+
+        SimulationModel simulation =
+                simulationService.getSimulationModelById(simulationId);
+
+        simulation = simulationService.setParametersForNextQuestion(simulation);
+
+        SimulationData simulationData = new SimulationData();
+        simulationPopulator.populate(simulation, simulationData);
+
+        return ResponseEntity.ok(simulationData);
+    }
+
+    @PostMapping("/answerQuestion")
+    public ResponseEntity<?> answerQuestion(HttpServletRequest request
+            , HttpServletResponse response, String simulationId,
+                                            String questionId,
+                                            String orderQuantity) {
+        SimulationModel simulation =
+                simulationService.getSimulationModelById(simulationId);
+
+        Optional<SimulationEntryModel> entryModelOpt =
+                simulation.getSimulationEntries().stream()
+                        .filter(simulationEntryModel -> Long.valueOf(questionId).equals(simulationEntryModel.getQuestionParameters().getQuestionId()))
+                        .findAny();
+
+        if (!entryModelOpt.isPresent()) {
+            return ResponseEntity.badRequest().body(new ErrorResponseData("User and Question owner does not match"));
+        } else {
+            QuestionParametersModel questionParametersModel =
+                    questionParametersService.getQuestionParametersModelById(questionId);
+            SimulationEntryModel simulationEntryModel =
+                    entryModelOpt.get();
+
+            simulation =
+                    questionParametersService.setAnswerForQuestion(simulation,
+                            simulationEntryModel, questionParametersModel
+                            , orderQuantity);
+
+            SimulationData simulationData = new SimulationData();
+            simulationPopulator.populate(simulation, simulationData);
+
+            return ResponseEntity.ok(simulationData);
+        }
+    }
 }
