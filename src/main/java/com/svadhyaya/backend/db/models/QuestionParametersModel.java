@@ -21,10 +21,6 @@ public class QuestionParametersModel {
     private BigDecimal costPerUnit;
 
 
-    //TODO Figure out how to map this
-    //@OneToMany
-    //private List<HistoricalSpotPricesModel> historicalSpotPrices;
-
     private BigDecimal unitOptionsPrice;
     private BigDecimal unitOptionsExercisePrice;
 
